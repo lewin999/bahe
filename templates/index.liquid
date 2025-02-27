@@ -1,0 +1,224 @@
+
+
+{% for product in collections['revive-mens-barefoot-style-grounded-running-shoe'].products %}
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <div class="product-card">
+        <div class="product-image">
+           {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: '300x400', crop: 'cover' }}" class="img-fluid" alt="{{ product.title }}">
+              {% else %}
+                <img src="{{ 'https://placehold.co/600x400' | asset_url }}" class="img-fluid" alt="{{ product.title }}">
+              {% endif %}
+        </div>
+        <div class="product-info">
+          <h2 class="modal-title" id="productModalLabel-{{ product.id }}">{{ product.title }}</h2>
+          <p class="product-description">{{ product.description | strip_html | truncatewords: 5 }}</p>
+          {% if product.selected_or_first_available_variant.option1 %}
+            <p class="product-color">{{ product.selected_or_first_available_variant.option1 }}</p>
+          {% endif %}
+          <p class="product-price">{{ product.price | money }}</p>
+          <button class="choose-option" data-bs-toggle="modal" data-bs-target="#productModal-{{ product.id }}">Choose option</button>
+          {% if product.metafields.reviews.rating %}
+            <p class="product-review">Average <span>review</span> {{ product.metafields.reviews.rating | round: 2 }}/5.00</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  {% comment %} {{- product.title | link_to: product.url }} {% endcomment %}
+
+
+
+
+{% comment %} 
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <div class="product-card">
+        <div class="product-image">
+          <img src="{{ 'img/BaheRediscoverGroundingEarthingHikingBootHikerForest6.webp' | asset_url }}" alt="Rediscover Barefoot-style Hiking Boot in Forest color">
+        </div>
+        <div class="product-info">
+          <h2 class="product-name">Rediscover</h2>
+          <p class="product-description">Barefoot-style Hiking Boot</p>
+          <p class="product-color">Forest</p>
+          <p class="product-price">£189.00</p>
+          <button class="choose-option" data-bs-toggle="modal" data-bs-target="#productModal">Choose option</button>
+          <p class="product-review">Average <span>review</span> 4.32/5.00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endcomment %}
+
+    <!-- Product Modal -->
+   <div class="modal fade" id="productModal-{{ product.id }}" tabindex="-1" aria-labelledby="productModalLabel-{{ product.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: '300x400', crop: 'center' }}" class="img-fluid" alt="{{ product.title }}">
+              {% else %}
+                <img src="{{ 'product-placeholder.jpg' | asset_url }}" class="img-fluid" alt="{{ product.title }}">
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              <div class="brand-name">{{ product.vendor }}</div>
+              <h2 class="modal-title" id="productModalLabel-{{ product.id }}">{{ product.title }}</h2>
+              <div class="price">{{ product.price | money }}</div>
+              
+              {% form 'product', product, id: 'add-to-cart-form', class: 'product-form' %}
+                {% comment %} {% for product_option in product.options_with_values %}
+                  {% if product_option.name == 'Color' %}
+                    <div class="options-section">
+                      <div class="option-label">{{ product_option.name }}</div>
+                      <div class="d-flex">
+                        {% for value in product_option.values %}
+                          {% assign color_code = value | handle | replace: '-', '' %}
+                          <div class="color-option {% if forloop.first %}active{% else %}inactive{% endif %}" 
+                               style="background-color: {{ color_code }};"
+                               data-value="{{ value }}"
+                               data-option-index="{{ forloop.index0 }}"></div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %} {% endcomment %}
+                <div class="options-section">
+                    <div class="option-label">Color</div>
+                    <div class="d-flex">
+                        {% for variant in product.variants %}
+                          {% if variant.option1 %}
+                            <div class="color-option {% if forloop.first %}active{% endif %}">
+                              <input type="radio" id="color{{ forloop.index }}" name="color" {% if forloop.first %}checked{% endif %} hidden>
+                              <label for="color{{ forloop.index }}">
+                                <img src="{{ variant.featured_image | img_url }}" alt="{{ variant.option1 }}">
+                              </label>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Size Options -->
+                {% assign has_size = false %}
+                {% for product_option in product.options_with_values %}
+                  {% if product_option.name == 'Size' %}
+                    {% assign has_size = true %}
+                    <div class="options-section">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="option-label">Size</div>
+                        <div class="sizing-guide">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16">
+                            <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
+                          </svg>
+                          <a href="/pages/sizing-guide">Sizing Guide</a>
+                        </div>
+                      </div>
+                      
+                      <div class="size-selector">
+                        <div class="size-tabs">
+                          <div class="size-tab active" data-target="uk-sizes-{{ product.id }}">UK</div>
+                          <div class="size-tab" data-target="eu-sizes-{{ product.id }}">EU</div>
+                          <div class="size-tab" data-target="us-sizes-{{ product.id }}">US</div>
+                          <div class="size-tab" data-target="aus-sizes-{{ product.id }}">AUS</div>
+                        </div>
+                        
+                        <div class="size-content active" id="uk-sizes-{{ product.id }}">
+                          <div class="size-grid">
+                            {% for value in product_option.values %}
+                              {% assign size_available = false %}
+                              {% for variant in product.variants %}
+                                {% if variant.option1 == value or variant.option2 == value or variant.option3 == value %}
+                                  {% if variant.available %}
+                                    {% assign size_available = true %}
+                                  {% endif %}
+                                {% endif %}
+                              {% endfor %}
+                              
+                              <div class="size-item {% if forloop.index == 3 %}active{% endif %} {% unless size_available %}disabled{% endunless %}" 
+                                   data-value="{{ value }}">
+                                {{ value }}
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                        
+                        <div class="size-content" id="eu-sizes-{{ product.id }}">
+                          <!-- Placeholder for EU sizes - you would need to map UK to EU sizes -->
+                          <div class="size-grid">
+                            {% for i in (36..45) %}
+                              <div class="size-item">EU{{ i }}</div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                        
+                        <div class="size-content" id="us-sizes-{{ product.id }}">
+                          <!-- Placeholder for US sizes - you would need to map UK to US sizes -->
+                          <div class="size-grid">
+                            {% for i in (4..13) %}
+                              <div class="size-item">US{{ i }}</div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                        
+                        <div class="size-content" id="aus-sizes-{{ product.id }}">
+                          <!-- Placeholder for AUS sizes - you would need to map UK to AUS sizes -->
+                          <div class="size-grid">
+                            {% for i in (3..12) %}
+                              <div class="size-item">AU{{ i }}</div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+                
+                <select name="id" id="ProductSelect-{{ product.id }}" class="product-single__variants d-none">
+                  {% for variant in product.variants %}
+                    {% if variant.available %}
+                      <option value="{{ variant.id }}">
+                        {{ variant.title }} - {{ variant.price | money }}
+                      </option>
+                    {% else %}
+                      <option disabled="disabled">
+                        {{ variant.title }} - Sold Out
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                
+                <!-- Quantity Section -->
+                <div class="quantity-section">
+                  <div class="quantity-label">Quantity</div>
+                  <div class="quantity-selector">
+                    <button type="button" class="quantity-btn decrease">−</button>
+                    <input type="text" name="quantity" class="quantity-input" value="1" min="1">
+                    <button type="button" class="quantity-btn increase">+</button>
+                  </div>
+                </div>
+                
+                <button type="submit" name="add" class="cart-btn mt-3">Add to cart</button>
+                <button type="button" class="buy-btn" onclick="buyNow()">Buy it now</button>
+              {% endform %}
+              
+              <a href="{{ product.url }}" class="view-details">View full details →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    {% endfor %}

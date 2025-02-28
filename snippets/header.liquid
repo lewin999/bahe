@@ -1,0 +1,18 @@
+<nav class="navbar">
+        <div class="logo">
+        <img width="120" src="{{ 'Asset_31_200x.svg' | asset_url }}">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#"></a></li>
+        </ul>
+        <a href="cart" class="cart-icon">
+            <i class="fa fa-cart-plus">
+            <span class="cart-item-count"> 
+            {%- if cart.item_count > 0 -%}
+                {{ cart.item_count }}
+            {%- else -%}
+                0
+            {%- endif -%}
+            </i>
+        </a>
+    </nav>

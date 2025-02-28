@@ -1,0 +1,83 @@
+<div class="cart-wrap">
+    <div class="">
+        <div class="row">
+        {% if cart.empty? %}
+        <h4 class="price-total">Cart is Empty</h4>
+        {% else %}
+            <div class="col-lg-8">
+                <div class="main-heading">Shopping Cart</div>
+                <div class="table-cart">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% form 'cart', cart %}
+                            {% for item in cart.items %}
+                            <tr>
+                                <td style="width: 25%">
+                                    <div class="display-flex align-center">
+                                        <div class="img-product">
+                                            <img src="{{ item.image | image_url }}" alt="" class="mCS_img_loaded">
+                                        </div>
+                                        <div class="name-product">
+                                            {{ item.product.title }} <br> <span>({{ item.variant.title }})</span>
+                                        </div>
+                                        <div class="price">
+                                            {{ item.price | money | replace: ' ', ''}}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 25%" class="product-count">
+                                    <input type="text" name="updates[]" value="{{item.quantity}}" class="qty">
+                                </td>
+                                <td style="width: 25%; padding: 10px 15px 0px">
+                                    <div class="total">
+                                        {{ item.final_line_price | money | replace: ' ', ''}}
+                                    </div>
+                                </td>
+
+                                <td style="width: 25%">
+                                    <a href="{{item.url_to_remove}}" title="">
+                                        <img style="width: 20px" src="{{ 'img/trash.png' | asset_url }}" alt="" class="mCS_img_loaded">
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="cart-totals">
+                    <h3>Cart Totals</h3>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Subtotal</td>
+                                <td class="subtotal">{{ cart.total_price | money | replace: ' ', '' }}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total</td>
+                                <td class="price-total">{{cart.total_price | money | replace: ' ', ''}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="btn-cart-totals">
+                        <button type="submit" name="update" class="update cart-btn mt-3" title="">Update Cart</button>
+                        <button type="submit" name="checkout" class=" buy-btn" title="">Checkout</button>
+                    </div>
+                </div>
+            </div>
+            {% endform%}
+            {%endif%}
+
+        </div>
+    </div>
+</div>
